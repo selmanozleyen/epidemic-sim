@@ -5,15 +5,21 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
-import persons.MaskValue;
+import persons.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class LauncherController implements Initializable {
-
+    @FXML
+    private ProgressBar progress;
+    @FXML
+    private ComboBox<String> maskValue;
     @FXML
     private Spinner<Integer> personNoSpinner;
 
@@ -41,6 +47,30 @@ public class LauncherController implements Initializable {
     private Button addPerson;
     @FXML
     private Button runButton;
+
+    List<Person> personList = new ArrayList<>();
+
+    @FXML
+    void handleAddPerson(ActionEvent e){
+        PersonFactory pf = new PersonFactory(
+                new PhysicalComponent(speedSpinner.getValue()),
+                new HealthComponent(
+                        socialDistanceSpinner.getValue(),
+                        socialTimeSpinner.getValue(),
+                        Double.parseDouble(maskValue.getValue())
+                )
+        );
+        double x,y,direction;
+        for (int i = 0; i < personNoSpinner.getValue(); i++) {
+            //TODO make const var
+            x = ThreadLocalRandom.current().nextDouble()*1000;
+            y = ThreadLocalRandom.current().nextDouble()*600;
+            direction = ThreadLocalRandom.current().nextDouble()*360;
+            personList.add(pf.createPerson(x,y,direction));
+        }
+        personNo.setText("Total Count: "+personList.size());
+        progress.setProgress(personList.size()/1_000.0);
+    }
 
     public Button getRunButton() {
         return runButton;

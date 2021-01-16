@@ -8,10 +8,6 @@ public class AppController {
     @FXML
     private Canvas townCanvas;
 
-    @FXML
-    public void initialize() {
-        //tabPane.setTabDragPolicy(TabPane.TabDragPolicy.REORDER);
-    }
 
     public GraphicsContext getTownGraphics() {
         return townCanvas.getGraphicsContext2D();

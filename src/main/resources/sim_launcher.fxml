@@ -7,6 +7,8 @@
 
 <?import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory?>
 <?import javafx.scene.control.SpinnerValueFactory.DoubleSpinnerValueFactory?>
+<?import java.lang.Double?>
+<?import java.lang.String?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="334.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LauncherController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -44,11 +46,11 @@
                  </valueFactory>
              </Spinner>
              <Label text="Mask" GridPane.rowIndex="2" />
-             <ComboBox prefWidth="150.0" promptText="Mask Coefficient" GridPane.columnIndex="1" GridPane.rowIndex="2">
+             <ComboBox fx:id="maskValue" prefWidth="150.0" value="0.2"  promptText="Mask Coefficient" GridPane.columnIndex="1"  GridPane.rowIndex="2">
                  <items>
                      <FXCollections fx:factory="observableArrayList">
-                         <MaskValue fx:constant="masked" />
-                         <MaskValue fx:constant="unmasked" />
+                         <String fx:value="0.2"/>
+                         <String fx:value="1.0"/>
                      </FXCollections>
                  </items>
              </ComboBox>
@@ -63,8 +65,8 @@
                      <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" max="20000" initialValue="1" amountToStepBy="1"/>
                  </valueFactory>
              </Spinner>
-             <Button fx:id="addPerson" mnemonicParsing="false" text="Add" GridPane.rowIndex="4" />
-            <ProgressBar prefWidth="200.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+             <Button fx:id="addPerson"  onAction="#handleAddPerson" mnemonicParsing="false" text="Add" GridPane.rowIndex="4" />
+            <ProgressBar fx:id="progress" prefWidth="200.0" progress="0.0"  GridPane.columnIndex="1" GridPane.rowIndex="5" />
              <Label fx:id="personNo" text="Total Count" GridPane.rowIndex="5"/>
 
          </children>
