@@ -17,6 +17,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class LauncherController implements Initializable {
     @FXML
+    private Spinner<Double> mortalitySpinner;
+    @FXML
+    private Spinner<Double> spreadingSpinner;
+    @FXML
+    private Button clearButton;
+    @FXML
     private ProgressBar progress;
     @FXML
     private ComboBox<String> maskValue;
@@ -49,6 +55,14 @@ public class LauncherController implements Initializable {
     private Button runButton;
 
     List<Person> personList = new ArrayList<>();
+
+    @FXML
+    void clearPersonList(ActionEvent e) {
+        personList.clear();
+        personNo.setText("Total Count: "+personList.size());
+        progress.setProgress(personList.size()/1_000.0);
+        progress.setAccessibleText("Recommended Limit (1000)");
+    }
 
     @FXML
     void handleAddPerson(ActionEvent e){
@@ -93,22 +107,35 @@ public class LauncherController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         Alert alert = new Alert(Alert.AlertType.WARNING,"invalid value",ButtonType.NEXT);
         personNoSpinner.getValueFactory().setConverter(
-                new IgnoringIntegerConverter(alert)
+                new IgnoringIntegerConverter(alert,1)
         );
         socialTimeSpinner.getValueFactory().setConverter(
-                new IgnoringDoubleConverter(alert)
+                new IgnoringDoubleConverter(alert,1.0)
         );
         socialDistanceSpinner.getValueFactory().setConverter(
-                new IgnoringDoubleConverter(alert)
+                new IgnoringDoubleConverter(alert,1.0)
         );
         speedSpinner.getValueFactory().setConverter(
-                new IgnoringDoubleConverter(alert)
+                new IgnoringDoubleConverter(alert,1.0)
         );
+        mortalitySpinner.getValueFactory().setConverter(
+                new IgnoringDoubleConverter(alert,0.1)
+        );
+        // Some hack to fix a os dependent bug (ENG and TR representations of doubles)
+        mortalitySpinner.getValueFactory().valueProperty().setValue(0.2);
+
+        spreadingSpinner.getValueFactory().setConverter(
+                new IgnoringDoubleConverter(alert,0.5)
+        );
+        // Some hack to fix a os dependent bug (ENG and TR representations of doubles)
+        spreadingSpinner.getValueFactory().valueProperty().setValue(0.6);
+
     }
 
     private static class IgnoringIntegerConverter extends StringConverter<Integer> {
         private final Alert a;
-        IgnoringIntegerConverter(Alert a){this.a = a;}
+        private final int defaultValue;
+        IgnoringIntegerConverter(Alert a, Integer defaultValue) {this.a = a;this.defaultValue = defaultValue;}
         /**
          * Converts the object provided into its string form.
          * Format of the returned string is defined by the specific converter.
@@ -142,8 +169,10 @@ public class LauncherController implements Initializable {
     }
     private static class IgnoringDoubleConverter extends StringConverter<Double> {
         Alert a;
-        IgnoringDoubleConverter(Alert a){
+        private final double defaultValue;
+        IgnoringDoubleConverter(Alert a,Double defaultValue) {
             this.a = a;
+            this.defaultValue = defaultValue;
         }
         /**
          * Converts the object provided into its string form.
