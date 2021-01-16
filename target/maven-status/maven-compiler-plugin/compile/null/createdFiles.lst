@@ -1,7 +1,6 @@
 persons\ITown.class
 persons\IPeople.class
 SimulationLauncher$1.class
-Simulation$SimRunnable$1.class
 persons\PhysicalState.class
 persons\HealthState.class
 SimulationLauncher.class
@@ -16,7 +15,6 @@ persons\IPerson.class
 persons\HospitalService.class
 LauncherController$IgnoringDoubleConverter.class
 Simulation$SimRunnable.class
-persons\MaskValue.class
 persons\PersonFactory.class
 Simulation.class
 LauncherController.class

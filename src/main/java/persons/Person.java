@@ -25,8 +25,13 @@ public class Person implements IPerson {
     }
     @Override
     public void update(Town t, GraphicsContext context){
+        context.save();
         physicalState.update(t,context);
-        healthState.update(t,context,physicalState.getHitCollider().getX(), physicalState.getHitCollider().getY());
+        healthState.update(t,context,
+                physicalState.getHitBounds().getCenterX(),
+                physicalState.getHitBounds().getCenterY()
+        );
+        context.restore();
     }
     @Override
     public IPhysicalState getPhysicalState() {

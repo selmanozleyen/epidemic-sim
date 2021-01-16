@@ -9,7 +9,7 @@ public class PhysicalComponent implements IPhysicalComponent {
     }
     @Override
     public double getThickness() {
-        return 2.5;
+        return 5;
     }
     public PhysicalComponent(double speed) {
         this.speed = speed;

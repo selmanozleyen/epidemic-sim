@@ -39,6 +39,7 @@ public class PhysicalState implements IPhysicalState {
     @Override
     public void update(Town t, GraphicsContext context){
         context.save();
+        context.setFill(Color.RED);
         if (enabled){
             double prevX = hitCollider.getX();
             double prevY = hitCollider.getY();
@@ -50,6 +51,7 @@ public class PhysicalState implements IPhysicalState {
                 hitCollider.setX(prevX);
                 hitCollider.setY(prevY);
             }
+            context.setFill(Color.BLUE);
         }
         drawPerson(context,hitCollider);
         context.restore();
@@ -57,7 +59,6 @@ public class PhysicalState implements IPhysicalState {
 
 
     private void drawPerson(GraphicsContext gc,Rectangle rect){
-        gc.setFill(Color.BLUE);
         gc.fillRect(rect.getX(),
                 rect.getY(),
                 rect.getWidth(),

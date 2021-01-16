@@ -28,13 +28,17 @@ public class HealthState implements IHealthState {
 
     @Override
     public void update(Town t, GraphicsContext context, double x, double y) {
-        context.save();
-        socialCollider.setCenterX(x);socialCollider.setCenterY(y);
+        socialCollider.setCenterX(x);
+        socialCollider.setCenterY(y);
+        /*context.save();
         context.setStroke(Color.PURPLE);
-        context.strokeOval(socialCollider.getCenterX(),
-                socialCollider.getCenterY(),socialCollider.getRadius(),socialCollider.getRadius());
-
-        context.restore();
+        context.strokeOval(
+                socialCollider.getCenterX()-socialCollider.getRadius()/2,
+                socialCollider.getCenterY()-socialCollider.getRadius()/2,
+                socialCollider.getRadius(),
+                socialCollider.getRadius()
+        );
+        context.restore();*/
     }
 
 }

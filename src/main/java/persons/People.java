@@ -1,6 +1,5 @@
 package persons;
 
-
 import javafx.scene.canvas.GraphicsContext;
 
 import java.util.*;
@@ -14,18 +13,26 @@ public class People implements IPeople{
     private final ArrayList<IPerson> freePeople = new ArrayList<>();
     private final ArrayList<Conversation> talkingPeople = new ArrayList<>();
     private final ArrayList<IPerson> grave = new ArrayList<>();
-
+    private int population = 0;
     @Override
     public void addPersonList(List<IPerson> people){
+        population+=people.size();
         freePeople.addAll(people);
     }
     @Override
     public void update(Town t, GraphicsContext context)
     {
 
-        makeMatches();
-        updateConversationList();
+        cleanConversationList();
         updateFreePeopleList();
+        makeMatches();
+
+        if( population != talkingPeople.size()*2+freePeople.size()+grave.size()){
+            System.out.println(population);
+            System.out.println(talkingPeople.size());
+            System.out.println(freePeople.size());
+            System.exit(-1);
+        }
         for (IPerson p : freePeople){
             p.update(t,context);
         }
@@ -36,7 +43,8 @@ public class People implements IPeople{
     private void updateFreePeopleList(){
 
     }
-    private void updateConversationList(){
+    private void cleanConversationList(){
+        /*int  a = talkingPeople.size()*2+freePeople.size();*/
         ArrayList<Conversation> toRemove = new ArrayList<>();
         talkingPeople.forEach((c) -> {
             if(c.isOver){
@@ -45,34 +53,44 @@ public class People implements IPeople{
             };
         });
         talkingPeople.removeAll(toRemove);
+        /*int  b = talkingPeople.size()*2+freePeople.size();
+        if(a != b){
+            System.out.println("LMAO");
+            System.exit(-1);
+        }*/
+
     }
     private void makeMatches(){
-        HashSet<IPerson> availablePersons = freePeople.stream().filter(IPerson::canTalk).collect(Collectors.toCollection(HashSet::new));
-        HashSet<IPerson> toRemove = new HashSet<>();
+        /*int  a = talkingPeople.size()*2+freePeople.size();
+        System.out.println("Before");
+        System.out.println(talkingPeople.size());
+        System.out.println(freePeople.size());*/
+        HashSet<IPerson> includes = new HashSet<>();
+        for(IPerson p1 : freePeople){
+            for(IPerson p2: freePeople){
 
-        for(IPerson p : freePeople){
-            if (availablePersons.contains(p)){
-                for(IPerson ap : availablePersons){
-                    if (p.inSocialField(ap)){
-                        /*try {
-                            Thread.sleep(10000000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }*/
-                        availablePersons.remove(ap);
-                        availablePersons.remove(p);
-                        toRemove.add(ap);
-                        toRemove.add(p);
-                        talkingPeople.add(new Conversation(p,ap));
-                        break;
-                    }
+                /*if (p1.inSocialField(p2)!=p2.inSocialField(p1)){
+                    System.out.println("HERE");
+                    System.exit(-1);
+                }*/
+                if(!includes.contains(p1) && !includes.contains(p2) && p1.inSocialField(p2) && p1 != p2){
+                    includes.add(p1);
+                    includes.add(p2);
+                    talkingPeople.add(new Conversation(p1,p2));
                 }
             }
         }
-        for(IPerson toDel: toRemove){
-            freePeople.remove(toDel);
+        for(Conversation c: talkingPeople){
+            freePeople.remove(c.a);freePeople.remove(c.b);
         }
-        toRemove.clear();
+        /*int  b = talkingPeople.size()*2+freePeople.size();
+        if(a != b){
+            System.out.println(talkingPeople.size());
+            System.out.println(freePeople.size());
+            System.out.println("MAKE MATCHES IS BUSTED");
+            System.exit(-1);
+        }*/
+
     }
     private static class  Conversation{
         IPerson a;
@@ -90,7 +108,9 @@ public class People implements IPeople{
                     a.getHealthState().getComponent().getSocialDistance(),
                     b.getHealthState().getComponent().getSocialDistance()
             );
-            assert timeLeftToConversation > 0 && commonSocialDistance >= 0;
+            assert timeLeftToConversation < 0 || commonSocialDistance >= 0;
+
+            timeLeftToConversation = timeLeftToConversation*60;
         }
         void update(Town town, GraphicsContext gc){
             if(!isOver){

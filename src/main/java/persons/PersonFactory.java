@@ -16,13 +16,15 @@ public class PersonFactory implements IPersonFactory{
     public Person createPerson(double x, double y, double direction){
         PhysicalState ps = new PhysicalState(
                 pc,
-                new Rectangle(x,y, pc.getThickness()*2+1,pc.getThickness()*2+1),
+                new Rectangle(x,y, pc.getThickness(),pc.getThickness()),
                 direction
         );
-        HealthState hs = new HealthState(hc,new Circle(x,y,hc.getSocialDistance()));
+        HealthState hs = new HealthState(hc,
+                new Circle(x+pc.getThickness()/2.0,y+pc.getThickness()/2.0,
+                pc.getThickness()+hc.getSocialDistance()));
         return new Person(ps,hs);
     }
-    public List<IPerson> createPersons(
+    /*public List<IPerson> createPersons(
             double minX,
             double minY,
             double maxX,
@@ -37,11 +39,14 @@ public class PersonFactory implements IPersonFactory{
             double y = ThreadLocalRandom.current().nextDouble()*(maxY - minY)+minY;
             double direction = ThreadLocalRandom.current().nextDouble()*360;
             PhysicalState ps = new PhysicalState(pc,new Rectangle(x,y,
-                    pc.getThickness()*2+1,pc.getThickness()*2+1),direction);
+                    pc.getThickness(),pc.getThickness()),direction);
 
-            HealthState hs = new HealthState(hc,new Circle(x,y,pc.getThickness()+hc.getSocialDistance()));
+            HealthState hs = new HealthState(
+                    hc,
+                    new Circle(x,y,
+                            pc.getThickness()*1.414+hc.getSocialDistance()));
             res.add(new Person(ps,hs));
         }
         return res;
-    }
+    }*/
 }

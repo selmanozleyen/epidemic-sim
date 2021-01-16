@@ -1,6 +1,7 @@
 package persons;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 
@@ -23,6 +24,7 @@ public class Town implements ITown {
     @Override
     public void update(GraphicsContext context){
         context.clearRect(0,0,width,height);
+        context.beginPath();
         people.update(this,context);
         hospitalService.update(this);
     }
