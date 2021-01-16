@@ -63,13 +63,14 @@ public class LauncherController implements Initializable {
         double x,y,direction;
         for (int i = 0; i < personNoSpinner.getValue(); i++) {
             //TODO make const var
-            x = ThreadLocalRandom.current().nextDouble()*1000;
-            y = ThreadLocalRandom.current().nextDouble()*600;
+            x = ThreadLocalRandom.current().nextDouble()*995+5;
+            y = ThreadLocalRandom.current().nextDouble()*595+5;
             direction = ThreadLocalRandom.current().nextDouble()*360;
             personList.add(pf.createPerson(x,y,direction));
         }
         personNo.setText("Total Count: "+personList.size());
         progress.setProgress(personList.size()/1_000.0);
+        progress.setAccessibleText("Recommended Limit (1000)");
     }
 
     public Button getRunButton() {
@@ -90,22 +91,24 @@ public class LauncherController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Alert alert = new Alert(Alert.AlertType.WARNING,"invalid value",ButtonType.NEXT);
         personNoSpinner.getValueFactory().setConverter(
-                new IgnoringIntegerConverter()
+                new IgnoringIntegerConverter(alert)
         );
         socialTimeSpinner.getValueFactory().setConverter(
-                new IgnoringDoubleConverter()
+                new IgnoringDoubleConverter(alert)
         );
         socialDistanceSpinner.getValueFactory().setConverter(
-                new IgnoringDoubleConverter()
+                new IgnoringDoubleConverter(alert)
         );
         speedSpinner.getValueFactory().setConverter(
-                new IgnoringDoubleConverter()
+                new IgnoringDoubleConverter(alert)
         );
     }
 
     private static class IgnoringIntegerConverter extends StringConverter<Integer> {
-
+        private final Alert a;
+        IgnoringIntegerConverter(Alert a){this.a = a;}
         /**
          * Converts the object provided into its string form.
          * Format of the returned string is defined by the specific converter.
@@ -131,13 +134,17 @@ public class LauncherController implements Initializable {
             try{
                 res = Integer.parseInt(string);
             }catch(Exception e){
+                a.show();
                 res = 0;
             }
             return res;
         }
     }
     private static class IgnoringDoubleConverter extends StringConverter<Double> {
-
+        Alert a;
+        IgnoringDoubleConverter(Alert a){
+            this.a = a;
+        }
         /**
          * Converts the object provided into its string form.
          * Format of the returned string is defined by the specific converter.
@@ -163,6 +170,7 @@ public class LauncherController implements Initializable {
             try{
                 res = Double.parseDouble(string);
             }catch(Exception e){
+                a.show();
                 res = 0;
             }
             return res;
