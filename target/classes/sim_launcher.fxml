@@ -34,7 +34,7 @@
                   <Label text="Speed" />
                    <Spinner fx:id="speedSpinner" editable="true" promptText="Speed" GridPane.columnIndex="1">
                        <valueFactory>
-                           <SpinnerValueFactory.DoubleSpinnerValueFactory amountToStepBy="10.0" initialValue="5.0" max="500.0" min="1.0" />
+                           <SpinnerValueFactory.DoubleSpinnerValueFactory amountToStepBy="10.0" initialValue="1.0" max="500.0" min="1.0" />
                        </valueFactory>
                    </Spinner>
                    <Label text="Social Distance" GridPane.rowIndex="1" />

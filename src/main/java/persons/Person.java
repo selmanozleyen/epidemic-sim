@@ -1,26 +1,39 @@
 package persons;
 
-import javafx.scene.Scene;
+import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 
-import java.util.ArrayList;
 
-public class Person {
-    PhysicalState physicalState;
-    HealthState healthState;
-    public Person(PhysicalState physicalState, HealthState healthState){
+public class Person implements IPerson {
+    IPhysicalState physicalState;
+    IHealthState healthState;
+    public Person(IPhysicalState physicalState, IHealthState healthState){
         this.healthState = healthState;
         this.physicalState = physicalState;
     }
-
-    boolean canTalk(){
+    @Override
+    public Bounds getSocialBounds(){
+        return healthState.getSocialBounds();
+    }
+    @Override
+    public boolean canTalk(){
         return physicalState.isEnabled();
     }
-    boolean inSocialField(Person other){
-        return other.healthState.getSocialBounds().intersects(other.healthState.getSocialBounds());
+    @Override
+    public boolean inSocialField(IPerson other){
+        return this.getSocialBounds().intersects(other.getSocialBounds());
     }
-    public void update(Town t,GraphicsContext context){
-        physicalState.update(context,t);
+    @Override
+    public void update(Town t, GraphicsContext context){
+        physicalState.update(t,context);
+        healthState.update(t,context,physicalState.getHitCollider().getX(), physicalState.getHitCollider().getY());
     }
-
+    @Override
+    public IPhysicalState getPhysicalState() {
+        return physicalState;
+    }
+    @Override
+    public IHealthState getHealthState() {
+        return healthState;
+    }
 }

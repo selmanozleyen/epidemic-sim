@@ -1,14 +1,16 @@
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
-
 import javafx.event.ActionEvent;
-import javafx.util.StringConverter;
+import persons.IPeople;
+import persons.ITown;
+import persons.People;
+import persons.Town;
 
 import java.io.IOException;
 
@@ -34,12 +36,16 @@ public class SimulationLauncher extends Application {
             public void handle(ActionEvent event) {
                 Simulation sim = null;
                 try {
-                    sim = new Simulation();
+                    IPeople people = new People();
+                    people.addPersonList(controller.getPersonList());
+                    ITown town = new Town(people,controller.getSpreadFactor(),controller.getMortalityRate());
+                    sim = new Simulation(town);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return;
                 }
-                assert sim != null;
                 primaryStage.setScene(new Scene(sim.getRootPane()));
+                sim.start();
             }
         });
 

@@ -54,7 +54,18 @@ public class LauncherController implements Initializable {
     @FXML
     private Button runButton;
 
-    List<Person> personList = new ArrayList<>();
+
+    private final List<IPerson> personList = new ArrayList<>();
+
+    public List<IPerson> getPersonList() {
+        return personList;
+    }
+    public double getSpreadFactor() {
+        return spreadingSpinner.getValue();
+    }
+    public double getMortalityRate(){
+        return mortalitySpinner.getValue();
+    }
 
     @FXML
     void clearPersonList(ActionEvent e) {
@@ -105,7 +116,7 @@ public class LauncherController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Alert alert = new Alert(Alert.AlertType.WARNING,"invalid value",ButtonType.NEXT);
+        Alert alert = new Alert(Alert.AlertType.WARNING,"invalid value",ButtonType.APPLY);
         personNoSpinner.getValueFactory().setConverter(
                 new IgnoringIntegerConverter(alert,1)
         );
@@ -119,20 +130,20 @@ public class LauncherController implements Initializable {
                 new IgnoringDoubleConverter(alert,1.0)
         );
         mortalitySpinner.getValueFactory().setConverter(
-                new IgnoringDoubleConverter(alert,0.1)
+                new IgnoringDoubleConverter(alert,0.2)
         );
         // Some hack to fix a os dependent bug (ENG and TR representations of doubles)
         mortalitySpinner.getValueFactory().valueProperty().setValue(0.2);
 
         spreadingSpinner.getValueFactory().setConverter(
-                new IgnoringDoubleConverter(alert,0.5)
+                new IgnoringDoubleConverter(alert,0.6)
         );
         // Some hack to fix a os dependent bug (ENG and TR representations of doubles)
         spreadingSpinner.getValueFactory().valueProperty().setValue(0.6);
 
     }
 
-    private static class IgnoringIntegerConverter extends StringConverter<Integer> {
+private static class IgnoringIntegerConverter extends StringConverter<Integer> {
         private final Alert a;
         private final int defaultValue;
         IgnoringIntegerConverter(Alert a, Integer defaultValue) {this.a = a;this.defaultValue = defaultValue;}
@@ -140,7 +151,7 @@ public class LauncherController implements Initializable {
          * Converts the object provided into its string form.
          * Format of the returned string is defined by the specific converter.
          *
-         * @param object the object of type {@code T} to convert
+     * @param object the object of type {@code T} to convert
          * @return a string representation of the object passed in.
          */
         @Override
@@ -162,7 +173,7 @@ public class LauncherController implements Initializable {
                 res = Integer.parseInt(string);
             }catch(Exception e){
                 a.show();
-                res = 0;
+                res = defaultValue;
             }
             return res;
         }
@@ -200,7 +211,7 @@ public class LauncherController implements Initializable {
                 res = Double.parseDouble(string);
             }catch(Exception e){
                 a.show();
-                res = 0;
+                res = defaultValue;
             }
             return res;
         }

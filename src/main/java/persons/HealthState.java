@@ -1,16 +1,19 @@
 package persons;
 
 import javafx.geometry.Bounds;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 
 public class HealthState implements IHealthState {
-    private final Shape socialCollider;
+    private final Circle socialCollider;
     private float timeToDie;
     private float timeToGetInfected;
     private float timeToHospital;
     private final IHealthComponent component;
 
-    public HealthState(IHealthComponent component,Shape socialCollider){
+    public HealthState(IHealthComponent component,Circle socialCollider){
         this.component = component;
         this.socialCollider = socialCollider;
     }
@@ -22,4 +25,16 @@ public class HealthState implements IHealthState {
     public Bounds getSocialBounds() {
         return socialCollider.getBoundsInLocal();
     }
+
+    @Override
+    public void update(Town t, GraphicsContext context, double x, double y) {
+        context.save();
+        socialCollider.setCenterX(x);socialCollider.setCenterY(y);
+        context.setStroke(Color.PURPLE);
+        context.strokeOval(socialCollider.getCenterX(),
+                socialCollider.getCenterY(),socialCollider.getRadius(),socialCollider.getRadius());
+
+        context.restore();
+    }
+
 }

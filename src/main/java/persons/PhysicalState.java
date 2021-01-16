@@ -32,17 +32,24 @@ public class PhysicalState implements IPhysicalState {
     }
 
     @Override
-    public void update(GraphicsContext context, Town t){
-        context.save();
-        double prevX = hitCollider.getX();
-        double prevY = hitCollider.getY();
-        hitCollider.setX(component.getSpeed()*Math.cos(direction)+prevX);
-        hitCollider.setY(component.getSpeed()*Math.sin(direction)+prevY);
+    public Rectangle getHitCollider() {
+        return hitCollider;
+    }
 
-        if (!t.square.getBoundsInLocal().intersects(hitCollider.getBoundsInParent())){
-            direction = ThreadLocalRandom.current().nextDouble()*360;
-            hitCollider.setX(prevX);
-            hitCollider.setY(prevY);
+    @Override
+    public void update(Town t, GraphicsContext context){
+        context.save();
+        if (enabled){
+            double prevX = hitCollider.getX();
+            double prevY = hitCollider.getY();
+            hitCollider.setX(component.getSpeed()*Math.cos(direction)+prevX);
+            hitCollider.setY(component.getSpeed()*Math.sin(direction)+prevY);
+
+            if (!t.square.getBoundsInLocal().intersects(hitCollider.getBoundsInParent())){
+                direction = ThreadLocalRandom.current().nextDouble()*360;
+                hitCollider.setX(prevX);
+                hitCollider.setY(prevY);
+            }
         }
         drawPerson(context,hitCollider);
         context.restore();
@@ -55,7 +62,6 @@ public class PhysicalState implements IPhysicalState {
                 rect.getY(),
                 rect.getWidth(),
                 rect.getHeight());
-        gc.setStroke(Color.BLACK);
     }
 
 }

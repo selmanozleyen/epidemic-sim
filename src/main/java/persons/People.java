@@ -5,41 +5,60 @@ import javafx.scene.canvas.GraphicsContext;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Mediator object
  */
-public class People {
-    private final ArrayList<Person> freePeople = new ArrayList<Person>();
-    private final ArrayList<Conversation> talkingPeople = new ArrayList<Conversation>();
-    private final ArrayList<Person> grave = new ArrayList<Person>();
+public class People implements IPeople{
+    private final ArrayList<IPerson> freePeople = new ArrayList<>();
+    private final ArrayList<Conversation> talkingPeople = new ArrayList<>();
+    private final ArrayList<IPerson> grave = new ArrayList<>();
 
-    public void addPerson(Person p){
-        freePeople.add(p);
-    }
-    void addPeople(List<Person> people){
+    @Override
+    public void addPersonList(List<IPerson> people){
         freePeople.addAll(people);
     }
-
-    void update(Town t, GraphicsContext context)
+    @Override
+    public void update(Town t, GraphicsContext context)
     {
-        for (Person p : freePeople){
+
+        makeMatches();
+        updateConversationList();
+        updateFreePeopleList();
+        for (IPerson p : freePeople){
             p.update(t,context);
         }
-        //makeMatches();
         for(Conversation c: talkingPeople){
-            c.update();
+            c.update(t,context);
         }
+    }
+    private void updateFreePeopleList(){
 
     }
+    private void updateConversationList(){
+        ArrayList<Conversation> toRemove = new ArrayList<>();
+        talkingPeople.forEach((c) -> {
+            if(c.isOver){
+                freePeople.add(c.a);freePeople.add(c.b);
+                toRemove.add(c);
+            };
+        });
+        talkingPeople.removeAll(toRemove);
+    }
     private void makeMatches(){
-        HashSet<Person> availablePersons = freePeople.stream().filter(Person::canTalk).collect(Collectors.toCollection(HashSet::new));
-        HashSet<Person> toRemove = new HashSet<>();
+        HashSet<IPerson> availablePersons = freePeople.stream().filter(IPerson::canTalk).collect(Collectors.toCollection(HashSet::new));
+        HashSet<IPerson> toRemove = new HashSet<>();
 
-        for(Person p : freePeople){
+        for(IPerson p : freePeople){
             if (availablePersons.contains(p)){
-                for(Person ap : availablePersons){
+                for(IPerson ap : availablePersons){
                     if (p.inSocialField(ap)){
+                        /*try {
+                            Thread.sleep(10000000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }*/
                         availablePersons.remove(ap);
                         availablePersons.remove(p);
                         toRemove.add(ap);
@@ -50,19 +69,48 @@ public class People {
                 }
             }
         }
-        for(Person toDel: toRemove){
+        for(IPerson toDel: toRemove){
             freePeople.remove(toDel);
         }
         toRemove.clear();
     }
     private static class  Conversation{
-        Person a;
-        Person b;
-        Conversation(Person a, Person b){
+        IPerson a;
+        IPerson b;
+        double timeLeftToConversation;
+        double commonSocialDistance;
+        boolean isOver = false;
+        Conversation(IPerson a, IPerson b){
             this.a = a; this.b = b;
+            timeLeftToConversation = Math.max(
+                    a.getHealthState().getComponent().getSocialTimeout(),
+                    b.getHealthState().getComponent().getSocialTimeout()
+            );
+            commonSocialDistance = Math.min(
+                    a.getHealthState().getComponent().getSocialDistance(),
+                    b.getHealthState().getComponent().getSocialDistance()
+            );
+            assert timeLeftToConversation > 0 && commonSocialDistance >= 0;
         }
-        void update(){
-
+        void update(Town town, GraphicsContext gc){
+            if(!isOver){
+                if (timeLeftToConversation > 0){
+                    timeLeftToConversation--;
+                    if (a.getPhysicalState().isEnabled()){
+                        a.getPhysicalState().setEnabled(false);
+                    }
+                    if (b.getPhysicalState().isEnabled()){
+                        b.getPhysicalState().setEnabled(false);
+                    }
+                }
+                else{
+                    isOver = true;
+                    a.getPhysicalState().setEnabled(true);
+                    b.getPhysicalState().setEnabled(true);
+                }
+            }
+            a.update(town,gc);
+            b.update(town,gc);
         }
     }
 }

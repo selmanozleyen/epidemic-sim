@@ -1,6 +1,7 @@
 package persons;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.shape.Rectangle;
 
 public interface IPhysicalState {
     boolean isEnabled();
@@ -9,6 +10,8 @@ public interface IPhysicalState {
 
     Bounds getHitBounds();
 
-    void update(GraphicsContext context, Town t);
+    Rectangle getHitCollider();
+
+    void update(Town t, GraphicsContext context);
 
 }

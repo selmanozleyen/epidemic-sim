@@ -1,5 +1,7 @@
-AppController.class
+persons\ITown.class
+persons\IPeople.class
 SimulationLauncher$1.class
+Simulation$SimRunnable$1.class
 persons\PhysicalState.class
 persons\HealthState.class
 SimulationLauncher.class
@@ -8,11 +10,12 @@ persons\IHealthComponent.class
 persons\People$Conversation.class
 persons\IPersonFactory.class
 persons\HealthComponent.class
-persons\PersonEventType.class
 persons\People.class
 LauncherController$IgnoringIntegerConverter.class
+persons\IPerson.class
 persons\HospitalService.class
 LauncherController$IgnoringDoubleConverter.class
+Simulation$SimRunnable.class
 persons\MaskValue.class
 persons\PersonFactory.class
 Simulation.class
@@ -21,4 +24,5 @@ persons\Person.class
 persons\IPhysicalComponent.class
 persons\IPhysicalState.class
 persons\PhysicalComponent.class
+SimController.class
 persons\IHealthState.class

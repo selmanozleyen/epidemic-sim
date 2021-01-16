@@ -22,7 +22,7 @@ public class PersonFactory implements IPersonFactory{
         HealthState hs = new HealthState(hc,new Circle(x,y,hc.getSocialDistance()));
         return new Person(ps,hs);
     }
-    public List<Person> createPersons(
+    public List<IPerson> createPersons(
             double minX,
             double minY,
             double maxX,
@@ -31,7 +31,7 @@ public class PersonFactory implements IPersonFactory{
     ){
         assert count > 0 && minX < maxX && minY < maxY && pc != null && hc != null;
 
-        ArrayList<Person> res = new ArrayList<>();
+        ArrayList<IPerson> res = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             double x = ThreadLocalRandom.current().nextDouble()*(maxX - minX)+minX;
             double y = ThreadLocalRandom.current().nextDouble()*(maxY - minY)+minY;
@@ -39,7 +39,7 @@ public class PersonFactory implements IPersonFactory{
             PhysicalState ps = new PhysicalState(pc,new Rectangle(x,y,
                     pc.getThickness()*2+1,pc.getThickness()*2+1),direction);
 
-            HealthState hs = new HealthState(hc,new Circle(x,y,hc.getSocialDistance()));
+            HealthState hs = new HealthState(hc,new Circle(x,y,pc.getThickness()+hc.getSocialDistance()));
             res.add(new Person(ps,hs));
         }
         return res;
