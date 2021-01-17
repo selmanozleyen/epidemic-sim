@@ -8,9 +8,21 @@ import javafx.scene.shape.Shape;
 
 public class HealthState implements IHealthState {
     private final Circle socialCollider;
-    private float timeToDie;
-    private float timeToGetInfected;
-    private float timeToHospital;
+
+    @Override
+    public double getTimeToDie() {
+        return timeToDie;
+    }
+
+    @Override
+    public void setTimeToDie(double timeToDie) {
+        this.timeToDie = timeToDie;
+    }
+
+    private double timeToDie=1;
+    private boolean dead = false;
+    private double timeToHospital=1;
+    private boolean infected = false;
     private final IHealthComponent component;
 
     public HealthState(IHealthComponent component,Circle socialCollider){
@@ -30,6 +42,12 @@ public class HealthState implements IHealthState {
     public void update(Town t, GraphicsContext context, double x, double y) {
         socialCollider.setCenterX(x);
         socialCollider.setCenterY(y);
+        if(infected){
+            timeToDie -=0.0166;
+            if (timeToDie <= 0){
+                dead = true;
+            }
+        }
         /*context.save();
         context.setStroke(Color.PURPLE);
         context.strokeOval(
@@ -41,4 +59,17 @@ public class HealthState implements IHealthState {
         context.restore();*/
     }
 
+    @Override
+    public boolean isInfected() {
+        return infected;
+    }
+    @Override
+    public void setInfected(boolean infected) {
+        this.infected = infected;
+    }
+
+    @Override
+    public boolean isDead() {
+        return dead;
+    }
 }

@@ -70,13 +70,14 @@ public class LauncherController implements Initializable {
     @FXML
     void clearPersonList(ActionEvent e) {
         personList.clear();
-        personNo.setText("Total Count: "+personList.size());
+        personNo.setText("Total Count: 0");
         progress.setProgress(personList.size()/1_000.0);
         progress.setAccessibleText("Recommended Limit (1000)");
     }
 
     @FXML
     void handleAddPerson(ActionEvent e){
+        double w = 1000, h =600, t = 5,deg = 360;
         PersonFactory pf = new PersonFactory(
                 new PhysicalComponent(speedSpinner.getValue()),
                 new HealthComponent(
@@ -87,10 +88,10 @@ public class LauncherController implements Initializable {
         );
         double x,y,direction;
         for (int i = 0; i < personNoSpinner.getValue(); i++) {
-            //TODO make const var
-            x = ThreadLocalRandom.current().nextDouble()*995+5;
-            y = ThreadLocalRandom.current().nextDouble()*595+5;
-            direction = ThreadLocalRandom.current().nextDouble()*360;
+            // make const var
+            x = ThreadLocalRandom.current().nextDouble()*(w-t)+t;
+            y = ThreadLocalRandom.current().nextDouble()*(h-t)+t;
+            direction = ThreadLocalRandom.current().nextDouble()*deg;
             personList.add(pf.createPerson(x,y,direction));
         }
         personNo.setText("Total Count: "+personList.size());

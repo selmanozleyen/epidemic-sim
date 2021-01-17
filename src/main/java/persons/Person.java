@@ -31,6 +31,9 @@ public class Person implements IPerson {
                 physicalState.getHitBounds().getCenterX(),
                 physicalState.getHitBounds().getCenterY()
         );
+        if(healthState.isDead()){
+            physicalState.setEnabled(false);
+        }
         context.restore();
     }
     @Override

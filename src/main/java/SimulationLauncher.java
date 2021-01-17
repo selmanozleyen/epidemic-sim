@@ -1,18 +1,15 @@
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
-import persons.IPeople;
-import persons.ITown;
-import persons.People;
-import persons.Town;
+import persons.*;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class SimulationLauncher extends Application {
 
@@ -27,8 +24,6 @@ public class SimulationLauncher extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sim_launcher.fxml"));
         Parent root = loader.load();
         controller = loader.getController();
-
-
         Scene scene = new Scene(root);
 
         controller.getRunButton().setOnAction(new EventHandler<ActionEvent>() {
@@ -36,9 +31,12 @@ public class SimulationLauncher extends Application {
             public void handle(ActionEvent event) {
                 Simulation sim = null;
                 try {
-                    IPeople people = new People();
-                    people.addPersonList(controller.getPersonList());
-                    ITown town = new Town(people,controller.getSpreadFactor(),controller.getMortalityRate());
+                    IPeople people = new People(controller.getSpreadFactor(),controller.getMortalityRate());
+                    List<IPerson> personList = controller.getPersonList();
+                    personList.get(ThreadLocalRandom.current().nextInt(personList.size()))
+                            .getHealthState().setInfected(true);
+                    people.addPersonList(personList);
+                    ITown town = new Town(people);
                     sim = new Simulation(town);
                 } catch (IOException e) {
                     e.printStackTrace();

@@ -31,10 +31,6 @@ public class PhysicalState implements IPhysicalState {
         return hitCollider.getBoundsInParent();
     }
 
-    @Override
-    public Rectangle getHitCollider() {
-        return hitCollider;
-    }
 
     @Override
     public void update(Town t, GraphicsContext context){

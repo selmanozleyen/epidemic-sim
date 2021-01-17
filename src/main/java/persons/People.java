@@ -3,8 +3,7 @@ package persons;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Mediator object
@@ -13,7 +12,25 @@ public class People implements IPeople{
     private final ArrayList<IPerson> freePeople = new ArrayList<>();
     private final ArrayList<Conversation> talkingPeople = new ArrayList<>();
     private final ArrayList<IPerson> grave = new ArrayList<>();
+    private final double spreadFactor;
+    private final double mortalityRate;
     private int population = 0;
+
+    @Override
+    public double getMortalityRate() {
+        return mortalityRate;
+    }
+
+    public People(double spreadFactor, double mortalityRate) {
+        this.spreadFactor = spreadFactor;
+        this.mortalityRate = mortalityRate;
+    }
+
+    @Override
+    public double getSpreadFactor(){
+        return spreadFactor;
+    }
+
     @Override
     public void addPersonList(List<IPerson> people){
         population+=people.size();
@@ -27,12 +44,12 @@ public class People implements IPeople{
         updateFreePeopleList();
         makeMatches();
 
-        if( population != talkingPeople.size()*2+freePeople.size()+grave.size()){
+        /*if( population != talkingPeople.size()*2+freePeople.size()+grave.size()){
             System.out.println(population);
             System.out.println(talkingPeople.size());
             System.out.println(freePeople.size());
             System.exit(-1);
-        }
+        }*/
         for (IPerson p : freePeople){
             p.update(t,context);
         }
@@ -92,7 +109,7 @@ public class People implements IPeople{
         }*/
 
     }
-    private static class  Conversation{
+    private class  Conversation{
         IPerson a;
         IPerson b;
         double timeLeftToConversation;
@@ -108,13 +125,32 @@ public class People implements IPeople{
                     a.getHealthState().getComponent().getSocialDistance(),
                     b.getHealthState().getComponent().getSocialDistance()
             );
+            if(a.getHealthState().isInfected() ^ b.getHealthState().isInfected()){
+                double p = getSpreadFactor() * (1+timeLeftToConversation/10) * a.getHealthState().getComponent().getMaskCoefficient()
+                        * b.getHealthState().getComponent().getMaskCoefficient() * (1-commonSocialDistance/10.0);
+                p = Math.min(1,p);
+
+                /*If Got Infected*/
+                if (p > ThreadLocalRandom.current().nextDouble()){
+                    if(!a.getHealthState().isInfected()){
+                        a.getHealthState().setInfected(true);
+                        a.getHealthState().setTimeToDie(100*(1-getMortalityRate()));
+                    } else{
+                        b.getHealthState().setInfected(true);
+                        b.getHealthState().setTimeToDie(100*(1-getMortalityRate()));
+                    }
+                }
+            }
             assert timeLeftToConversation < 0 || commonSocialDistance >= 0;
 
             timeLeftToConversation = timeLeftToConversation*60;
         }
         void update(Town town, GraphicsContext gc){
             if(!isOver){
-                if (timeLeftToConversation > 0){
+                if (timeLeftToConversation > 0 &&
+                    !a.getHealthState().isDead() &&
+                    !b.getHealthState().isDead()
+                ){
                     timeLeftToConversation--;
                     if (a.getPhysicalState().isEnabled()){
                         a.getPhysicalState().setEnabled(false);
@@ -125,8 +161,12 @@ public class People implements IPeople{
                 }
                 else{
                     isOver = true;
-                    a.getPhysicalState().setEnabled(true);
-                    b.getPhysicalState().setEnabled(true);
+                    if (!a.getHealthState().isDead()){
+                        a.getPhysicalState().setEnabled(true);
+                    }
+                    if(!b.getHealthState().isDead()){
+                        b.getPhysicalState().setEnabled(true);
+                    }
                 }
             }
             a.update(town,gc);

@@ -11,13 +11,9 @@ public class Town implements ITown {
     HospitalService hospitalService = new HospitalService();
     final int width=1000;
     final int height=600;
-    final double spreadFactor;
-    final double mortalityRate;
 
     Rectangle square = new Rectangle(width,height);
-    public Town(IPeople people,double spreadFactor, double mortalityRate){
-        this.spreadFactor = spreadFactor;
-        this.mortalityRate = mortalityRate;
+    public Town(IPeople people){
         this.people = people;
     }
 

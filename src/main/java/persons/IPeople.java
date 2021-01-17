@@ -5,6 +5,10 @@ import javafx.scene.canvas.GraphicsContext;
 import java.util.List;
 
 public interface IPeople {
+    double getMortalityRate();
+
+    double getSpreadFactor();
+
     void addPersonList(List<IPerson> people);
 
     void update(Town t, GraphicsContext context);

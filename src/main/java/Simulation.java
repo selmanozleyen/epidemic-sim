@@ -28,24 +28,15 @@ public class Simulation {
         this.simController = loader.<SimController>getController();
         this.town = town;
         this.sim = new SimRunnable(town,simController.getTownGraphics(), simController.getPauseBtn());
-        /*Task<Void> task =  new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                (new SimRunnable(town,simController.getTownGraphics(), simController.getPauseBtn())).run();
-                return null;
-            }
-        };
-        this.thread  = new Thread(task);*/
     }
     public void start(){
         sim.run();
-        //thread.start();
     }
+
     private static class SimRunnable {
         boolean active = true;
         ITown town;
         Timeline timeline;
-        AnimationTimer timer;
         GraphicsContext gc;
         Button pauseBtn;
         public SimRunnable(ITown town, GraphicsContext gc, Button pauseBtn) {
@@ -66,20 +57,12 @@ public class Simulation {
                     }
             );
             this.timeline = new Timeline(
-                    new KeyFrame(Duration.millis(16), e ->{
+                    new KeyFrame(Duration.millis(16.6), e ->{
                         town.update(gc);
                     })
             );
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.setAutoReverse(false);
-            //timeline.set
-            //timeline.setCycleCount(Duration.INDEFINITE);
-            /*this.timer = new AnimationTimer(){
-                @Override
-                public void handle(long now) {
-                    timeline.play();
-                }
-            };*/
         }
 
         public void run() {
