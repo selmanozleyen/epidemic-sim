@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class SimulationLauncher extends Application {
+public class App extends Application {
 
     public static void main(String[] args) {
         launch(args);
@@ -25,7 +25,6 @@ public class SimulationLauncher extends Application {
         Parent root = loader.load();
         controller = loader.getController();
         Scene scene = new Scene(root);
-
         controller.getRunButton().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

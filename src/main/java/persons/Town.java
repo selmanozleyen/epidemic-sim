@@ -13,7 +13,6 @@ public class Town implements ITown {
     private final Rectangle square = new Rectangle(width,height);
     private final HospitalService hospitalService;
 
-
     @Override
     public Node getTownSquare() {
         return square;
@@ -23,6 +22,7 @@ public class Town implements ITown {
     public HospitalService getHospitalService() {
         return hospitalService;
     }
+
     public Town(IPeople people){
         this.people = people;
         hospitalService = new HospitalService(people.getAvailablePersons().size());
@@ -31,7 +31,6 @@ public class Town implements ITown {
     @Override
     public void update(GraphicsContext context){
         context.clearRect(0,0,width,height);
-        context.beginPath();
         people.update(this,context);
         hospitalService.update(this,people.getAvailablePersons());
     }

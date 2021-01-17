@@ -36,14 +36,13 @@ public class HealthState implements IHealthState {
 
     private double timeToHospital=25;
     private boolean infected = false;
-    private final Logger log;
+    private final Logger LOG =  Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private final IHealthComponent component;
 
 
     public HealthState(IHealthComponent component,Circle socialCollider){
         this.component = component;
         this.socialCollider = socialCollider;
-        log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     }
     @Override
     public IHealthComponent getComponent(){
@@ -62,7 +61,7 @@ public class HealthState implements IHealthState {
             timeToDie -=0.0166;
             timeToHospital -= 0.0166;
             if (timeToDie <= 0){
-                log.log(Level.INFO,"DIED :()");
+                LOG.log(Level.INFO,"DEATH");
                 dead = true;
             }
         }

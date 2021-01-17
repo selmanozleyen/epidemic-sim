@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.canvas.*?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -13,7 +14,7 @@
                   <Canvas fx:id="townCanvas" height="600.0" width="1000.0" />
                   <ButtonBar layoutX="800.0" layoutY="-6.0" prefHeight="40.0" prefWidth="200.0">
                     <buttons>
-                      <Button fx:id="pauseBtn" mnemonicParsing="false" text="Pause" />
+                      <Button fx:id="pauseBtn" mnemonicParsing="false" opacity="0.9" text="Pause" />
                     </buttons>
                   </ButtonBar>
                </children></AnchorPane>
@@ -21,7 +22,29 @@
     </Tab>
     <Tab text="Stats">
       <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="1000.0" />
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="1000.0">
+               <children>
+                  <TableView layoutX="38.0" layoutY="476.0" prefHeight="82.0" prefWidth="924.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="Death" />
+                      <TableColumn prefWidth="75.0" text="Infected" />
+                        <TableColumn prefWidth="104.80000305175781" text="Initial Population" />
+                        <TableColumn prefWidth="127.20001220703125" text="Current Population" />
+                        <TableColumn prefWidth="127.20001220703125" text="Spreading Rate (R)" />
+                        <TableColumn prefWidth="127.20001220703125" text="Mortality Factor (Z)" />
+                        <TableColumn prefWidth="139.199951171875" text="Avg. Social Distance" />
+                        <TableColumn prefWidth="139.199951171875" text="Mask Usage Percentage" />
+                    </columns>
+                  </TableView>
+                  <StackedAreaChart  fx:id="areaChart" layoutX="250.0" layoutY="14.0" title="Death &amp; Infection">
+                    <xAxis>
+                      <NumberAxis side="BOTTOM" fx:id="xAxis" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis fx:id="yAxis" side="LEFT" />
+                    </yAxis>
+                  </StackedAreaChart>
+               </children></AnchorPane>
       </content>
     </Tab>
   </tabs>

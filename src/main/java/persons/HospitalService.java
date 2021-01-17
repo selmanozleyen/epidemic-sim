@@ -7,7 +7,6 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 public class HospitalService {
     final private static int threadCount = 2;
@@ -32,15 +31,13 @@ public class HospitalService {
     public  void setPauseBtn(Button pauseBtn){
         this.pauseBtn = pauseBtn;
     }
+
     void addPatients(final List<IPerson> patients) {
-        VentilatorService task = new VentilatorService(log,patients,recovered,recovering);
+        VentilatorService task = new VentilatorService(patients,recovered,recovering);
         if (pauseBtn != null){
-            pauseBtn.addEventHandler(ActionEvent.ACTION, (e)->{
-                task.toggle();
-            });
+            pauseBtn.addEventHandler(ActionEvent.ACTION, (e)-> task.toggle());
         }
         recovering.addAll(patients);
-
         exec.submit(task);
     }
     int remainingCapacity(){
@@ -81,19 +78,18 @@ public class HospitalService {
         private final Queue<IPerson> recovering;
         private final List<IPerson> patients;
         private final Queue<IPerson> recovered;
-        private final Logger log;
+        private final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
         private boolean paused=false;
-        VentilatorService(Logger log, final List<IPerson> patients,
+        VentilatorService(final List<IPerson> patients,
                           Queue<IPerson> recovered,
                           Queue<IPerson> recovering){
             this.patients = patients;
             this.recovered = recovered;
             this.recovering = recovering;
-            this.log = log;
         }
         @Override
         public Void call() {
-            log.log(Level.INFO,"Curing: "+patients);
+            LOG.log(Level.INFO,"Curing: "+patients);
             // this is equal to 10 seconds
             for (int i = 0; i < 625; i++) {
                 waitForResume();
@@ -105,7 +101,7 @@ public class HospitalService {
                     //e.printStackTrace();
                 }
             }
-            log.log(Level.INFO,"Cured: "+patients);
+            LOG.log(Level.INFO,"Cured: "+patients);
 
             recovering.removeAll(patients);
             recovered.addAll(patients);

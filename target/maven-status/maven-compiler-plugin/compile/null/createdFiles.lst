@@ -14,6 +14,7 @@ persons\People.class
 LauncherController$IgnoringIntegerConverter.class
 persons\IPerson.class
 persons\HospitalService.class
+persons\StatsService.class
 LauncherController$IgnoringDoubleConverter.class
 Simulation$SimRunnable.class
 persons\PersonFactory.class

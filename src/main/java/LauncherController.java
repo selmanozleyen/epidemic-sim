@@ -50,8 +50,6 @@ public class LauncherController implements Initializable {
     @FXML
     private Label personNo;
     @FXML
-    private Button addPerson;
-    @FXML
     private Button runButton;
 
 
@@ -71,13 +69,15 @@ public class LauncherController implements Initializable {
     void clearPersonList(ActionEvent e) {
         personList.clear();
         personNo.setText("Total Count: 0");
-        progress.setProgress(personList.size()/1_000.0);
-        progress.setAccessibleText("Recommended Limit (1000)");
+        progress.setProgress(personList.size()/2_000.0);
+        progress.setAccessibleText("Recommended Limit (2000)");
     }
 
     @FXML
     void handleAddPerson(ActionEvent e){
-        double w = 1000, h =600, t = 5,deg = 360;
+        double w = SimController.CANVAS_WIDTH;
+        double h =  SimController.CANVAS_HEIGHT;
+        double t = 5,deg = 360;
         PersonFactory pf = new PersonFactory(
                 new PhysicalComponent(speedSpinner.getValue()),
                 new HealthComponent(
@@ -88,15 +88,14 @@ public class LauncherController implements Initializable {
         );
         double x,y,direction;
         for (int i = 0; i < personNoSpinner.getValue(); i++) {
-            // make const var
             x = ThreadLocalRandom.current().nextDouble()*(w-t)+t;
             y = ThreadLocalRandom.current().nextDouble()*(h-t)+t;
             direction = ThreadLocalRandom.current().nextDouble()*deg;
             personList.add(pf.createPerson(x,y,direction));
         }
         personNo.setText("Total Count: "+personList.size());
-        progress.setProgress(personList.size()/1_000.0);
-        progress.setAccessibleText("Recommended Limit (1000)");
+        progress.setProgress(personList.size()/2_000.0);
+        progress.setAccessibleText("Recommended Limit (2000)");
     }
 
     public Button getRunButton() {

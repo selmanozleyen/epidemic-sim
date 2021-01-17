@@ -17,7 +17,7 @@ public class People implements IPeople{
     private final ArrayList<IPerson> grave = new ArrayList<>();
     private final double spreadFactor;
     private final double mortalityRate;
-    private final Logger log;
+    private final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     @Override
     public double getMortalityRate() {
         return mortalityRate;
@@ -26,7 +26,6 @@ public class People implements IPeople{
     public People(double spreadFactor, double mortalityRate) {
         this.spreadFactor = spreadFactor;
         this.mortalityRate = mortalityRate;
-        log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     }
 
     @Override
@@ -116,12 +115,12 @@ public class People implements IPeople{
                 /*If Got Infected*/
                 if (p > ThreadLocalRandom.current().nextDouble()){
                     if(!a.getHealthState().isInfected()){
-                        log.log(Level.INFO,"Infected: "+a+" p: "+p);
+                        LOG.log(Level.INFO,"Infected: "+a+" p: "+p);
                         a.getHealthState().setInfected(true);
                         a.getHealthState().setTimeToHospital(25);
                         a.getHealthState().setTimeToDie(100*(1-getMortalityRate()));
                     } else{
-                        log.log(Level.INFO,"Infected: "+b+" p: "+p);
+                        LOG.log(Level.INFO,"Infected: "+b+" p: "+p);
                         b.getHealthState().setInfected(true);
                         a.getHealthState().setTimeToHospital(25);
                         b.getHealthState().setTimeToDie(100*(1-getMortalityRate()));
@@ -129,7 +128,6 @@ public class People implements IPeople{
                 }
             }
             assert timeLeftToConversation < 0 || commonSocialDistance >= 0;
-
             timeLeftToConversation = timeLeftToConversation*60;
         }
         void update(ITown town, GraphicsContext gc){

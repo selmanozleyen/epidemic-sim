@@ -14,7 +14,6 @@ import java.io.IOException;
 
 
 public class Simulation {
-    //private final SimRunnable sim;
     private final Thread thread;
     final Task<Void> task;
     Parent root;
@@ -30,7 +29,8 @@ public class Simulation {
         root = loader.load();
         simController = loader.<SimController>getController();
         this.town = town;
-        task = new Task<Void>() {
+
+        task = new Task<>() {
             @Override
             protected Void call() throws Exception {
                 SimRunnable sim = new SimRunnable(
