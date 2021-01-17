@@ -36,14 +36,14 @@
                         <TableColumn prefWidth="139.199951171875" text="Mask Usage Percentage" />
                     </columns>
                   </TableView>
-                  <StackedAreaChart  fx:id="areaChart" layoutX="250.0" layoutY="14.0" title="Death &amp; Infection">
+                  <AreaChart  fx:id="areaChart" layoutX="250.0" layoutY="14.0" title="Death &amp; Infection">
                     <xAxis>
                       <NumberAxis side="BOTTOM" fx:id="xAxis" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis fx:id="yAxis" side="LEFT" />
                     </yAxis>
-                  </StackedAreaChart>
+                  </AreaChart>
                </children></AnchorPane>
       </content>
     </Tab>

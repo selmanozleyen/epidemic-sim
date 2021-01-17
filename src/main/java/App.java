@@ -3,6 +3,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import persons.*;
@@ -37,6 +38,11 @@ public class App extends Application {
                     people.addPersonList(personList);
                     ITown town = new Town(people);
                     sim = new Simulation(town);
+                    sim.simController.areaChart.setData(controller.deathSeries);
+                    sim.simController.areaChart.getData().add(new XYChart.Series<Number,Number>());
+                    sim.simController.areaChart.getData().get(0).getData()
+                            .add(new XYChart.Data<Number,Number>(0,0));
+                    //sim.simController.areaChart.getData().
                 } catch (IOException e) {
                     e.printStackTrace();
                     return;

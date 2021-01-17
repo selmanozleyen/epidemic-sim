@@ -1,13 +1,22 @@
+import javafx.beans.Observable;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ListPropertyBase;
+import javafx.beans.property.adapter.JavaBeanBooleanProperty;
+import javafx.beans.property.adapter.JavaBeanBooleanPropertyBuilder;
+import javafx.beans.property.adapter.JavaBeanIntegerProperty;
+import javafx.beans.property.adapter.JavaBeanIntegerPropertyBuilder;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.shape.Circle;
 import javafx.util.StringConverter;
 import persons.*;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,18 +38,8 @@ public class LauncherController implements Initializable {
     @FXML
     private Spinner<Integer> personNoSpinner;
 
-    public Spinner<Double> getSocialTimeSpinner() {
-        return socialTimeSpinner;
+    public LauncherController() throws NoSuchMethodException {
     }
-
-    public Spinner<Double> getSocialDistanceSpinner() {
-        return socialDistanceSpinner;
-    }
-
-    public Spinner<Double> getSpeedSpinner() {
-        return speedSpinner;
-    }
-
     @FXML
     private Spinner<Double> socialTimeSpinner;
     @FXML
@@ -51,8 +50,27 @@ public class LauncherController implements Initializable {
     private Label personNo;
     @FXML
     private Button runButton;
+    ObservableList<XYChart.Series<Number,Number>> deathSeries = FXCollections.observableArrayList();
+    //private final JavaBeanIntegerProperty deathEvent  = JavaBeanIntegerPropertyBuilder.create().name("death").build();
+    private final JavaBeanBooleanProperty infectionEvent  = null;
+            //JavaBeanBooleanPropertyBuilder.create().name("infection").build();
 
+    JavaBeanBooleanProperty getInfectionEvent(){
+        return infectionEvent;
+    }
 
+    private final IHealthStateFactory hf = new HealthStateFactory();
+    private final IPhysicalStateFactory psf = new PhysicalStateFactory();
+
+    private final IHealthStateFactory shf = new IHealthStateFactory(){
+        @Override
+        public IHealthState createHealthState(IHealthComponent hc, Circle socialCollider) {
+            return new HealthStateWithStats(
+                    new HealthStateFactory().createHealthState(hc,socialCollider),
+                    deathSeries,infectionEvent
+            );
+        }
+    };
     private final List<IPerson> personList = new ArrayList<>();
 
     public List<IPerson> getPersonList() {
@@ -84,7 +102,7 @@ public class LauncherController implements Initializable {
                         socialDistanceSpinner.getValue(),
                         socialTimeSpinner.getValue(),
                         Double.parseDouble(maskValue.getValue())
-                )
+                ), psf,shf
         );
         double x,y,direction;
         for (int i = 0; i < personNoSpinner.getValue(); i++) {
@@ -142,8 +160,7 @@ public class LauncherController implements Initializable {
         spreadingSpinner.getValueFactory().valueProperty().setValue(0.6);
 
     }
-
-private static class IgnoringIntegerConverter extends StringConverter<Integer> {
+    private static class IgnoringIntegerConverter extends StringConverter<Integer> {
         private final Alert a;
         private final int defaultValue;
         IgnoringIntegerConverter(Alert a, Integer defaultValue) {this.a = a;this.defaultValue = defaultValue;}
@@ -168,7 +185,7 @@ private static class IgnoringIntegerConverter extends StringConverter<Integer> {
          */
         @Override
         public Integer fromString(String string) {
-            int res = 0;
+            int res;
             try{
                 res = Integer.parseInt(string);
             }catch(Exception e){
@@ -206,7 +223,7 @@ private static class IgnoringIntegerConverter extends StringConverter<Integer> {
          */
         @Override
         public Double fromString(String string) {
-            double res = 0;
+            double res;
             try{
                 res = Double.parseDouble(string);
             }catch(Exception e){

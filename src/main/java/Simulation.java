@@ -2,6 +2,7 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.adapter.JavaBeanBooleanProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,7 +25,9 @@ public class Simulation {
     }
     ITown town;
 
-    Simulation(ITown town) throws IOException {
+    Simulation(
+            ITown town
+    ) throws IOException {
         loader = new FXMLLoader(getClass().getResource("primary.fxml"));
         root = loader.load();
         simController = loader.<SimController>getController();

@@ -58,9 +58,9 @@ public class HealthState implements IHealthState {
         socialCollider.setCenterX(x);
         socialCollider.setCenterY(y);
         if(infected){
-            timeToDie -=0.0166;
-            timeToHospital -= 0.0166;
-            if (timeToDie <= 0){
+            setTimeToDie(timeToDie-0.0166);
+            setTimeToHospital(timeToHospital-0.0166);
+            if (getTimeToDie() <= 0){
                 LOG.log(Level.INFO,"DEATH");
                 dead = true;
             }
