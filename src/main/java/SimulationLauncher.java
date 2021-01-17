@@ -42,8 +42,8 @@ public class SimulationLauncher extends Application {
                     e.printStackTrace();
                     return;
                 }
-                primaryStage.setScene(new Scene(sim.getRootPane()));
                 sim.start();
+                primaryStage.setScene(new Scene(sim.getRootPane()));
             }
         });
 

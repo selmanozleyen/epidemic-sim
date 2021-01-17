@@ -24,7 +24,7 @@ public class Person implements IPerson {
         return this.getSocialBounds().intersects(other.getSocialBounds());
     }
     @Override
-    public void update(Town t, GraphicsContext context){
+    public void update(ITown t, GraphicsContext context){
         context.save();
         if(!healthState.isDead()){
             physicalState.update(t,context);

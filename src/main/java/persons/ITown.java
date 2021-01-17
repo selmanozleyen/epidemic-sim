@@ -1,7 +1,13 @@
 package persons;
 
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 
 public interface ITown {
-    void update(GraphicsContext context);
+    HospitalService getHospitalService();
+
+    void update(GraphicsContext gc);
+
+    Node getTownSquare();
 }

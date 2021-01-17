@@ -13,5 +13,5 @@ public interface IPerson {
 
     boolean inSocialField(IPerson other);
 
-    void update(Town t, GraphicsContext context);
+    void update(ITown t, GraphicsContext context);
 }

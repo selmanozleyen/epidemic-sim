@@ -4,18 +4,20 @@ import javafx.scene.canvas.GraphicsContext;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
  * Mediator object
  */
 public class People implements IPeople{
-    private final ArrayList<IPerson> freePeople = new ArrayList<>();
+    private final ArrayList<IPerson> availablePersons = new ArrayList<>();
     private final ArrayList<Conversation> talkingPeople = new ArrayList<>();
     private final ArrayList<IPerson> grave = new ArrayList<>();
     private final double spreadFactor;
     private final double mortalityRate;
-
+    private final Logger log;
     @Override
     public double getMortalityRate() {
         return mortalityRate;
@@ -24,6 +26,7 @@ public class People implements IPeople{
     public People(double spreadFactor, double mortalityRate) {
         this.spreadFactor = spreadFactor;
         this.mortalityRate = mortalityRate;
+        log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     }
 
     @Override
@@ -33,35 +36,41 @@ public class People implements IPeople{
 
     @Override
     public void addPersonList(List<IPerson> people){
-        freePeople.addAll(people);
+        availablePersons.addAll(people);
     }
     @Override
-    public void update(Town t, GraphicsContext context)
+    public void update(ITown t, GraphicsContext context)
     {
-
-        cleanConversationList();
-        cleanFreePeopleList();
+        updateTalks();
+        updateGrave();
         makeMatches();
 
-        for (IPerson p : freePeople){
+        for (IPerson p : availablePersons){
             p.update(t,context);
         }
         for(Conversation c: talkingPeople){
             c.update(t,context);
         }
     }
-    private void cleanFreePeopleList(){
-        List<IPerson> toRemove =
-                freePeople.stream().
-                        filter(p -> p.getHealthState().isDead()).collect(Collectors.toList());
-        System.out.println(toRemove);
-        toRemove.forEach(freePeople::remove);
+
+    @Override
+    public List<IPerson> getAvailablePersons() {
+        return availablePersons;
     }
-    private void cleanConversationList(){
+
+    private void updateGrave(){
+        List<IPerson> toRemove =
+                availablePersons.stream().
+                        filter(p -> p.getHealthState().isDead()).collect(Collectors.toList());
+        grave.addAll(toRemove);
+        availablePersons.removeAll(toRemove);
+    }
+    private void updateTalks(){
         ArrayList<Conversation> toRemove = new ArrayList<>();
         talkingPeople.forEach((c) -> {
             if(c.isOver){
-                freePeople.add(c.a);freePeople.add(c.b);
+                availablePersons.add(c.a);
+                availablePersons.add(c.b);
                 toRemove.add(c);
             }
         });
@@ -69,8 +78,8 @@ public class People implements IPeople{
     }
     private void makeMatches(){
         HashSet<IPerson> includes = new HashSet<>();
-        for(IPerson p1 : freePeople){
-            for(IPerson p2: freePeople){
+        for(IPerson p1 : availablePersons){
+            for(IPerson p2: availablePersons){
                 if(!includes.contains(p1) && !includes.contains(p2) && p1.inSocialField(p2) && p1 != p2){
                     includes.add(p1);
                     includes.add(p2);
@@ -79,7 +88,8 @@ public class People implements IPeople{
             }
         }
         for(Conversation c: talkingPeople){
-            freePeople.remove(c.a);freePeople.remove(c.b);
+            availablePersons.remove(c.a);
+            availablePersons.remove(c.b);
         }
 
     }
@@ -103,14 +113,17 @@ public class People implements IPeople{
                 double p = getSpreadFactor() * (1+timeLeftToConversation/10) * a.getHealthState().getComponent().getMaskCoefficient()
                         * b.getHealthState().getComponent().getMaskCoefficient() * (1-commonSocialDistance/10.0);
                 p = Math.min(1,p);
-
                 /*If Got Infected*/
                 if (p > ThreadLocalRandom.current().nextDouble()){
                     if(!a.getHealthState().isInfected()){
+                        log.log(Level.INFO,"Infected: "+a+" p: "+p);
                         a.getHealthState().setInfected(true);
+                        a.getHealthState().setTimeToHospital(25);
                         a.getHealthState().setTimeToDie(100*(1-getMortalityRate()));
                     } else{
+                        log.log(Level.INFO,"Infected: "+b+" p: "+p);
                         b.getHealthState().setInfected(true);
+                        a.getHealthState().setTimeToHospital(25);
                         b.getHealthState().setTimeToDie(100*(1-getMortalityRate()));
                     }
                 }
@@ -119,7 +132,7 @@ public class People implements IPeople{
 
             timeLeftToConversation = timeLeftToConversation*60;
         }
-        void update(Town town, GraphicsContext gc){
+        void update(ITown town, GraphicsContext gc){
             if(!isOver){
                 if (timeLeftToConversation > 0 &&
                     !a.getHealthState().isDead() &&

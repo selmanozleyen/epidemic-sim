@@ -11,5 +11,7 @@ public interface IPeople {
 
     void addPersonList(List<IPerson> people);
 
-    void update(Town t, GraphicsContext context);
+    void update(ITown t, GraphicsContext context);
+
+    List<IPerson> getAvailablePersons();
 }

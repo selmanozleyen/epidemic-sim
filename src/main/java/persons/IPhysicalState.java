@@ -9,6 +9,6 @@ public interface IPhysicalState {
 
     Bounds getHitBounds();
 
-    void update(Town t, GraphicsContext context);
+    void update(ITown t, GraphicsContext context);
 
 }

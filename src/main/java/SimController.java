@@ -18,6 +18,5 @@ public class SimController {
 
     public GraphicsContext getTownGraphics() {
         return townCanvas.getGraphicsContext2D();
-
     }
 }

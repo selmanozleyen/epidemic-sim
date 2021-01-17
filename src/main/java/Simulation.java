@@ -33,8 +33,6 @@ public class Simulation {
         task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                //sim.run();
-                System.out.println(Platform.isFxApplicationThread());
                 SimRunnable sim = new SimRunnable(
                         town,
                         simController.getTownGraphics(),
@@ -62,17 +60,18 @@ public class Simulation {
             this.pauseBtn.setOnAction(
                     (e) -> {
                         if(active){
-                            this.timeline.stop();
+                            timeline.stop();
                             active = false;
                             this.pauseBtn.setText("Resume");
                         } else{
-                            this.timeline.play();
+                            timeline.play();
                             active = true;
                             this.pauseBtn.setText("Pause");
                         }
                     }
             );
-            this.timeline = new Timeline(
+            town.getHospitalService().setPauseBtn(pauseBtn);
+            timeline = new Timeline(
                     new KeyFrame(Duration.millis(16.6), e ->{
                         town.update(gc);
                     })

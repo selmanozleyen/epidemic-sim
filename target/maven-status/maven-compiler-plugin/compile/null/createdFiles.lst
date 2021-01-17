@@ -1,3 +1,4 @@
+Simulation$1.class
 persons\ITown.class
 persons\IPeople.class
 SimulationLauncher$1.class
@@ -19,6 +20,7 @@ persons\PersonFactory.class
 Simulation.class
 LauncherController.class
 persons\Person.class
+persons\HospitalService$VentilatorService.class
 persons\IPhysicalComponent.class
 persons\IPhysicalState.class
 persons\PhysicalComponent.class

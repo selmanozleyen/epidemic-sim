@@ -1,20 +1,31 @@
 package persons;
 
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 
 public class Town implements ITown {
 
-    IPeople people;
-    HospitalService hospitalService = new HospitalService();
-    final int width=1000;
+    private final IPeople people;
+    private final int width=1000;
     final int height=600;
+    private final Rectangle square = new Rectangle(width,height);
+    private final HospitalService hospitalService;
 
-    Rectangle square = new Rectangle(width,height);
+
+    @Override
+    public Node getTownSquare() {
+        return square;
+    }
+
+    @Override
+    public HospitalService getHospitalService() {
+        return hospitalService;
+    }
     public Town(IPeople people){
         this.people = people;
+        hospitalService = new HospitalService(people.getAvailablePersons().size());
     }
 
     @Override
@@ -22,6 +33,6 @@ public class Town implements ITown {
         context.clearRect(0,0,width,height);
         context.beginPath();
         people.update(this,context);
-        hospitalService.update(this);
+        hospitalService.update(this,people.getAvailablePersons());
     }
 }

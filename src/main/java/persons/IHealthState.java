@@ -8,12 +8,16 @@ public interface IHealthState {
 
     void setTimeToDie(double timeToDie);
 
+    double getTimeToHospital();
+
+    void setTimeToHospital(double timeToHospital);
+
     IHealthComponent getComponent();
 
     Bounds getSocialBounds();
 
 
-    void update(Town t, GraphicsContext context, double x, double y);
+    void update(ITown t, GraphicsContext context, double x, double y);
 
     boolean isInfected();
 

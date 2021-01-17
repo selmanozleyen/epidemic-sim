@@ -4,7 +4,9 @@ import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class HealthState implements IHealthState {
     private final Circle socialCollider;
@@ -19,15 +21,29 @@ public class HealthState implements IHealthState {
         this.timeToDie = timeToDie;
     }
 
-    private double timeToDie=1;
+    private double timeToDie=60;
     private boolean dead = false;
-    private double timeToHospital=1;
+
+    @Override
+    public double getTimeToHospital() {
+        return timeToHospital;
+    }
+
+    @Override
+    public void setTimeToHospital(double timeToHospital) {
+        this.timeToHospital = timeToHospital;
+    }
+
+    private double timeToHospital=25;
     private boolean infected = false;
+    private final Logger log;
     private final IHealthComponent component;
+
 
     public HealthState(IHealthComponent component,Circle socialCollider){
         this.component = component;
         this.socialCollider = socialCollider;
+        log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     }
     @Override
     public IHealthComponent getComponent(){
@@ -39,12 +55,14 @@ public class HealthState implements IHealthState {
     }
 
     @Override
-    public void update(Town t, GraphicsContext context, double x, double y) {
+    public void update(ITown t, GraphicsContext context, double x, double y) {
         socialCollider.setCenterX(x);
         socialCollider.setCenterY(y);
         if(infected){
             timeToDie -=0.0166;
+            timeToHospital -= 0.0166;
             if (timeToDie <= 0){
+                log.log(Level.INFO,"DIED :()");
                 dead = true;
             }
         }

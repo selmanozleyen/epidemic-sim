@@ -33,7 +33,7 @@ public class PhysicalState implements IPhysicalState {
 
 
     @Override
-    public void update(Town t, GraphicsContext context){
+    public void update(ITown t, GraphicsContext context){
         context.save();
         context.setFill(Color.RED);
         if (enabled){
@@ -42,7 +42,7 @@ public class PhysicalState implements IPhysicalState {
             hitCollider.setX(component.getSpeed()*Math.cos(direction)+prevX);
             hitCollider.setY(component.getSpeed()*Math.sin(direction)+prevY);
 
-            if (!t.square.getBoundsInLocal().intersects(hitCollider.getBoundsInParent())){
+            if (!t.getTownSquare().getBoundsInLocal().intersects(hitCollider.getBoundsInParent())){
                 direction = ThreadLocalRandom.current().nextDouble()*360;
                 hitCollider.setX(prevX);
                 hitCollider.setY(prevY);
