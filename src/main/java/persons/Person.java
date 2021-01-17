@@ -26,13 +26,14 @@ public class Person implements IPerson {
     @Override
     public void update(Town t, GraphicsContext context){
         context.save();
-        physicalState.update(t,context);
-        healthState.update(t,context,
-                physicalState.getHitBounds().getCenterX(),
-                physicalState.getHitBounds().getCenterY()
-        );
-        if(healthState.isDead()){
-            physicalState.setEnabled(false);
+        if(!healthState.isDead()){
+            physicalState.update(t,context);
+            healthState.update(t,context,
+                    physicalState.getHitBounds().getCenterX(),
+                    physicalState.getHitBounds().getCenterY()
+            );
+        }else{
+            System.out.println("DIED");
         }
         context.restore();
     }

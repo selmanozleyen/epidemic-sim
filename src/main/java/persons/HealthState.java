@@ -48,15 +48,17 @@ public class HealthState implements IHealthState {
                 dead = true;
             }
         }
-        /*context.save();
-        context.setStroke(Color.PURPLE);
-        context.strokeOval(
-                socialCollider.getCenterX()-socialCollider.getRadius()/2,
-                socialCollider.getCenterY()-socialCollider.getRadius()/2,
-                socialCollider.getRadius(),
-                socialCollider.getRadius()
-        );
-        context.restore();*/
+        if (infected){
+            context.save();
+            context.setStroke(Color.DARKOLIVEGREEN);
+            context.strokeOval(
+                    socialCollider.getCenterX()-socialCollider.getRadius()/2,
+                    socialCollider.getCenterY()-socialCollider.getRadius()/2,
+                    socialCollider.getRadius(),
+                    socialCollider.getRadius()
+            );
+            context.restore();
+        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,7 +14,9 @@ import java.io.IOException;
 
 
 public class Simulation {
-    private final SimRunnable sim;
+    //private final SimRunnable sim;
+    private final Thread thread;
+    final Task<Void> task;
     Parent root;
     FXMLLoader loader;
     SimController simController;
@@ -23,14 +26,27 @@ public class Simulation {
     ITown town;
 
     Simulation(ITown town) throws IOException {
-        this.loader = new FXMLLoader(getClass().getResource("primary.fxml"));
-        this.root = loader.load();
-        this.simController = loader.<SimController>getController();
+        loader = new FXMLLoader(getClass().getResource("primary.fxml"));
+        root = loader.load();
+        simController = loader.<SimController>getController();
         this.town = town;
-        this.sim = new SimRunnable(town,simController.getTownGraphics(), simController.getPauseBtn());
+        task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                //sim.run();
+                System.out.println(Platform.isFxApplicationThread());
+                SimRunnable sim = new SimRunnable(
+                        town,
+                        simController.getTownGraphics(),
+                        simController.getPauseBtn());
+                sim.timeline.play();
+                return null;
+            }
+        };
+        this.thread = new Thread(task);
     }
     public void start(){
-        sim.run();
+        thread.start();
     }
 
     private static class SimRunnable {
@@ -63,10 +79,6 @@ public class Simulation {
             );
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.setAutoReverse(false);
-        }
-
-        public void run() {
-            timeline.play();
         }
     }
 }

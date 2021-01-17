@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 /**
  * Mediator object
@@ -14,7 +15,6 @@ public class People implements IPeople{
     private final ArrayList<IPerson> grave = new ArrayList<>();
     private final double spreadFactor;
     private final double mortalityRate;
-    private int population = 0;
 
     @Override
     public double getMortalityRate() {
@@ -33,7 +33,6 @@ public class People implements IPeople{
 
     @Override
     public void addPersonList(List<IPerson> people){
-        population+=people.size();
         freePeople.addAll(people);
     }
     @Override
@@ -41,15 +40,9 @@ public class People implements IPeople{
     {
 
         cleanConversationList();
-        updateFreePeopleList();
+        cleanFreePeopleList();
         makeMatches();
 
-        /*if( population != talkingPeople.size()*2+freePeople.size()+grave.size()){
-            System.out.println(population);
-            System.out.println(talkingPeople.size());
-            System.out.println(freePeople.size());
-            System.exit(-1);
-        }*/
         for (IPerson p : freePeople){
             p.update(t,context);
         }
@@ -57,39 +50,27 @@ public class People implements IPeople{
             c.update(t,context);
         }
     }
-    private void updateFreePeopleList(){
-
+    private void cleanFreePeopleList(){
+        List<IPerson> toRemove =
+                freePeople.stream().
+                        filter(p -> p.getHealthState().isDead()).collect(Collectors.toList());
+        System.out.println(toRemove);
+        toRemove.forEach(freePeople::remove);
     }
     private void cleanConversationList(){
-        /*int  a = talkingPeople.size()*2+freePeople.size();*/
         ArrayList<Conversation> toRemove = new ArrayList<>();
         talkingPeople.forEach((c) -> {
             if(c.isOver){
                 freePeople.add(c.a);freePeople.add(c.b);
                 toRemove.add(c);
-            };
+            }
         });
         talkingPeople.removeAll(toRemove);
-        /*int  b = talkingPeople.size()*2+freePeople.size();
-        if(a != b){
-            System.out.println("LMAO");
-            System.exit(-1);
-        }*/
-
     }
     private void makeMatches(){
-        /*int  a = talkingPeople.size()*2+freePeople.size();
-        System.out.println("Before");
-        System.out.println(talkingPeople.size());
-        System.out.println(freePeople.size());*/
         HashSet<IPerson> includes = new HashSet<>();
         for(IPerson p1 : freePeople){
             for(IPerson p2: freePeople){
-
-                /*if (p1.inSocialField(p2)!=p2.inSocialField(p1)){
-                    System.out.println("HERE");
-                    System.exit(-1);
-                }*/
                 if(!includes.contains(p1) && !includes.contains(p2) && p1.inSocialField(p2) && p1 != p2){
                     includes.add(p1);
                     includes.add(p2);
@@ -100,13 +81,6 @@ public class People implements IPeople{
         for(Conversation c: talkingPeople){
             freePeople.remove(c.a);freePeople.remove(c.b);
         }
-        /*int  b = talkingPeople.size()*2+freePeople.size();
-        if(a != b){
-            System.out.println(talkingPeople.size());
-            System.out.println(freePeople.size());
-            System.out.println("MAKE MATCHES IS BUSTED");
-            System.exit(-1);
-        }*/
 
     }
     private class  Conversation{
