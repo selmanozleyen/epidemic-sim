@@ -38,8 +38,6 @@ public class LauncherController implements Initializable {
     @FXML
     private Spinner<Integer> personNoSpinner;
 
-    public LauncherController() throws NoSuchMethodException {
-    }
     @FXML
     private Spinner<Double> socialTimeSpinner;
     @FXML
@@ -50,14 +48,17 @@ public class LauncherController implements Initializable {
     private Label personNo;
     @FXML
     private Button runButton;
-    ObservableList<XYChart.Series<Number,Number>> deathSeries = FXCollections.observableArrayList();
-    //private final JavaBeanIntegerProperty deathEvent  = JavaBeanIntegerPropertyBuilder.create().name("death").build();
-    private final JavaBeanBooleanProperty infectionEvent  = null;
-            //JavaBeanBooleanPropertyBuilder.create().name("infection").build();
 
-    JavaBeanBooleanProperty getInfectionEvent(){
-        return infectionEvent;
+    public ObservableList<XYChart.Series<Number, Number>> getSeries() {
+        return series;
     }
+
+    public void setSeries(ObservableList<XYChart.Series<Number, Number>> series) {
+        this.series = series;
+    }
+
+    private ObservableList<XYChart.Series<Number,Number>> series = FXCollections.observableArrayList();
+
 
     private final IHealthStateFactory hf = new HealthStateFactory();
     private final IPhysicalStateFactory psf = new PhysicalStateFactory();
@@ -67,7 +68,7 @@ public class LauncherController implements Initializable {
         public IHealthState createHealthState(IHealthComponent hc, Circle socialCollider) {
             return new HealthStateWithStats(
                     new HealthStateFactory().createHealthState(hc,socialCollider),
-                    deathSeries,infectionEvent
+                    series
             );
         }
     };

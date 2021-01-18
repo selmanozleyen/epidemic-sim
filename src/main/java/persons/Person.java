@@ -32,8 +32,6 @@ public class Person implements IPerson {
                     physicalState.getHitBounds().getCenterX(),
                     physicalState.getHitBounds().getCenterY()
             );
-        }else{
-            System.out.println("DIED");
         }
         context.restore();
     }

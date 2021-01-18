@@ -5,6 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import java.lang.String?>
 <TabPane minHeight="600" minWidth="1000" prefHeight="630.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE" tabDragPolicy="REORDER" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SimController">
   <tabs>
     <Tab text="Simulation">
@@ -24,26 +25,18 @@
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="1000.0">
                <children>
-                  <TableView layoutX="38.0" layoutY="476.0" prefHeight="82.0" prefWidth="924.0">
-                    <columns>
-                      <TableColumn prefWidth="75.0" text="Death" />
-                      <TableColumn prefWidth="75.0" text="Infected" />
-                        <TableColumn prefWidth="104.80000305175781" text="Initial Population" />
-                        <TableColumn prefWidth="127.20001220703125" text="Current Population" />
-                        <TableColumn prefWidth="127.20001220703125" text="Spreading Rate (R)" />
-                        <TableColumn prefWidth="127.20001220703125" text="Mortality Factor (Z)" />
-                        <TableColumn prefWidth="139.199951171875" text="Avg. Social Distance" />
-                        <TableColumn prefWidth="139.199951171875" text="Mask Usage Percentage" />
-                    </columns>
-                  </TableView>
-                  <AreaChart  fx:id="areaChart" layoutX="250.0" layoutY="14.0" title="Death &amp; Infection">
+                  <LineChart fx:id="areaChart" animated="false" layoutX="14.0" layoutY="14.0" legendSide="RIGHT" title="Death &amp; Infection">
                     <xAxis>
                       <NumberAxis side="BOTTOM" fx:id="xAxis" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis fx:id="yAxis" side="LEFT" />
                     </yAxis>
-                  </AreaChart>
+                  </LineChart>
+                  <ListView fx:id="listView" layoutX="597.0" layoutY="32.0" prefHeight="276.0" prefWidth="154.0" />
+                   <ListView fx:id="listViewLabel"  layoutX="765.0" layoutY="32.0" prefHeight="274.0" prefWidth="154.0" >
+
+                   </ListView>
                </children></AnchorPane>
       </content>
     </Tab>

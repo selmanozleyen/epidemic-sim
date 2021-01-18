@@ -19,7 +19,16 @@ public class Simulation {
     final Task<Void> task;
     Parent root;
     FXMLLoader loader;
-    SimController simController;
+
+    public SimController getSimController() {
+        return simController;
+    }
+
+    public void setSimController(SimController simController) {
+        this.simController = simController;
+    }
+
+    private SimController simController;
     Parent getRootPane(){
         return root;
     }
@@ -30,7 +39,7 @@ public class Simulation {
     ) throws IOException {
         loader = new FXMLLoader(getClass().getResource("primary.fxml"));
         root = loader.load();
-        simController = loader.<SimController>getController();
+        simController = loader.getController();
         this.town = town;
 
         task = new Task<>() {

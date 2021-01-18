@@ -62,7 +62,7 @@ public class HospitalService {
             /* add patients to recovering atomically*/
             if (patients.size() > 0) {
                 addPatients(patients);
-            };
+            }
             patients = null;
             /*ensuring patients structure is not modified from now on */
         }
@@ -115,7 +115,7 @@ public class HospitalService {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            };
+            }
         }
         private synchronized void toggle(){
             if(paused){
