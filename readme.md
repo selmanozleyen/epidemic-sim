@@ -1,4 +1,7 @@
-## HOW TO RUN
+## Intro
+An epidemic simulation with visuals to practice design patterns. Many design principles was in my mind while I implemented it. Put extra effort to get familiar with modern Java practices with functional programming paradigms which I love. An over-engineered example for sure...
+
+## How To Run
 Make sure you have maven and javac then you can type:
 ```
 mvn clean javafx:run
