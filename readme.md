@@ -7,12 +7,17 @@ Make sure you have maven and javac then you can type:
 mvn clean javafx:run
 ```
 ## GUI
-## Visual
-Red squares: People currently in social interaction.  
-Blue squares: People walking around without social interaction.  
-Squares with green circles: Infected people.  
+### Start Screen
+Starting window asks some parameters for the simulation. You can change them every run and see how it changes the Death Count.  
+*Spoiler Alert: You don't go extinct when you stay home & wear mask*.
+
+![fig3](media/3.png)
+### Visual
+**Red Squares**: People currently in social interaction.  
+**Blue Squares**: People walking around without social interaction.  
+**Squares with Green Circles**: Infected people.  
 ![fig1](media/1.png)
-## Real-Time Plot
+### Real-Time Plot
 Stats are gather by a decorated component of the simulation to demonstrate the decoupling of components.
 ![fig2](media/2.png)
 
